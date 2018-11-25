@@ -1,0 +1,75 @@
+import bicicletas.*
+
+describe "bicis y depositos" {
+	var biciGrande = new Bicicleta(
+		rodado = 28, largo = 150, 
+		accesorios = #{new Farolito()}, marca = "Olmo"
+	) 
+	var biciDeCarga = new Bicicleta(
+		rodado = 26, largo = 110, 
+		accesorios = #{new Farolito(), new Canasto(volumen = 8), new MorralDeBici(largo = 21, tieneOjoDeGato = true)}, 
+		marca = "Legnano"
+	)
+	var biciChica = new Bicicleta(
+		rodado = 20, largo = 90,
+		accesorios = #{new MorralDeBici(largo = 6, tieneOjoDeGato = false)}, marca = "Legnano"
+	)
+	
+	var elDeposito = new Deposito(bicis = #{biciGrande, biciDeCarga, biciChica})
+	
+	test "bici grande" {
+		assert.equals(85, biciGrande.altura())
+		assert.equals(34, biciGrande.velocidadDeCrucero())
+		assert.equals(0, biciGrande.carga())
+		assert.equals(14.5, biciGrande.peso())
+		assert.that(biciGrande.tieneLuz())
+		assert.equals(1, biciGrande.cantidadAccesoriosLivianos())
+	}
+	test "bici de carga" {
+		assert.equals(80, biciDeCarga.altura())
+		assert.equals(28, biciDeCarga.velocidadDeCrucero())
+		assert.equals(23, biciDeCarga.carga())
+		assert.equals(13+0.5+0.8+1.2, biciDeCarga.peso())
+		assert.that(biciDeCarga.tieneLuz())
+		assert.equals(2, biciDeCarga.cantidadAccesoriosLivianos())
+	}
+	test "bici chica" {
+		assert.equals(65, biciChica.altura())
+		assert.equals(22, biciChica.velocidadDeCrucero())
+		assert.equals(2, biciChica.carga())
+		assert.equals(11.2, biciChica.peso())
+		assert.notThat(biciChica.tieneLuz())
+		assert.equals(0, biciChica.cantidadAccesoriosLivianos())
+	}
+	
+	test "deposito" {
+		assert.equals(#{biciGrande, biciDeCarga}, elDeposito.bicisRapidas())
+		assert.equals(#{"Olmo", "Legnano"}, elDeposito.marcasDeBicis())
+		assert.notThat(elDeposito.esNocturno())
+		assert.that(elDeposito.hayBiciParaLlevar(10))
+		assert.notThat(elDeposito.hayBiciParaLlevar(50))
+	}
+	test "depositoNocturno" {
+		var depoReducido = new Deposito(bicis = #{biciGrande, biciDeCarga})
+		assert.that(depoReducido.esNocturno())
+	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
